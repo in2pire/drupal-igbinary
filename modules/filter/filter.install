@@ -328,7 +328,7 @@ function filter_update_7003() {
             'module' => $module,
             'name' => $new_name,
             'weight' => $record->weight,
-            'settings' => serialize($settings),
+            'settings' => drupal_serialize($settings),
             'status' => 1,
           ))
           ->execute();
@@ -406,7 +406,7 @@ function filter_update_7005() {
       'weight' => 0,
       'status' => 1,
       'module' => 'filter',
-      'settings' => serialize(array()),
+      'settings' => drupal_serialize(array()),
     ))
     ->values(array(
       'format' => $format_id,
@@ -414,7 +414,7 @@ function filter_update_7005() {
       'weight' => 1,
       'status' => 1,
       'module' => 'filter',
-      'settings' => serialize(array()),
+      'settings' => drupal_serialize(array()),
     ))
     ->values(array(
       'format' => $format_id,
@@ -422,7 +422,7 @@ function filter_update_7005() {
       'weight' => 2,
       'status' => 1,
       'module' => 'filter',
-      'settings' => serialize(array()),
+      'settings' => drupal_serialize(array()),
     ))
     ->execute();
 

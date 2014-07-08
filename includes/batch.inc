@@ -30,7 +30,7 @@ function batch_load($id) {
     ':token' => drupal_get_token($id),
   ))->fetchField();
   if ($batch) {
-    return unserialize($batch);
+    return drupal_unserialize($batch);
   }
   return FALSE;
 }
@@ -532,7 +532,7 @@ function _batch_finished() {
 function _batch_shutdown() {
   if ($batch = batch_get()) {
     db_update('batch')
-      ->fields(array('batch' => serialize($batch)))
+      ->fields(array('batch' => drupal_serialize($batch)))
       ->condition('bid', $batch['id'])
       ->execute();
   }

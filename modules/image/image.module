@@ -1226,7 +1226,7 @@ function image_effects() {
       ->orderBy('image_effects.weight', 'ASC')
       ->execute();
     foreach ($result as $effect) {
-      $effect['data'] = unserialize($effect['data']);
+      $effect['data'] = drupal_unserialize($effect['data']);
       $definition = image_effect_definition_load($effect['name']);
       // Do not load image effects whose definition cannot be found.
       if ($definition) {

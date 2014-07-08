@@ -67,9 +67,9 @@ function list_update_7001() {
 
       // Place the new setting in the existing serialized 'data' column.
       $data = db_query("SELECT data FROM {field_config} WHERE id = :id", array(':id' => $field['id']))->fetchField();
-      $data = unserialize($data);
+      $data = drupal_unserialize($data);
       $data['settings']['allowed_values'] = $allowed_values;
-      $update['data'] = serialize($data);
+      $update['data'] = drupal_serialize($data);
     }
 
     // Rename field types.

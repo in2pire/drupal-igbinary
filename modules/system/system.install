@@ -3093,12 +3093,12 @@ function system_update_7076() {
     ->fields('ml', array('mlid', 'options'));
   foreach ($query->execute() as $menu_link) {
     if (strpos($menu_link['options'], 'query') !== FALSE) {
-      $menu_link['options'] = unserialize($menu_link['options']);
+      $menu_link['options'] = drupal_unserialize($menu_link['options']);
       if (isset($menu_link['options']['query']) && is_string($menu_link['options']['query'])) {
         $menu_link['options']['query'] = drupal_get_query_array($menu_link['options']['query']);
         db_update('menu_links')
           ->fields(array(
-            'options' => serialize($menu_link['options']),
+            'options' => drupal_serialize($menu_link['options']),
           ))
           ->condition('mlid', $menu_link['mlid'], '=')
           ->execute();

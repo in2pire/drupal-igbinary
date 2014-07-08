@@ -2247,7 +2247,7 @@ function system_update_files_database(&$files, $type) {
       $updated_fields = array();
 
       // Handle info specially, compare the serialized value.
-      $serialized_info = serialize($files[$file->name]->info);
+      $serialized_info = drupal_serialize($files[$file->name]->info);
       if ($serialized_info != $file->info) {
         $updated_fields['info'] = $serialized_info;
       }
@@ -2298,7 +2298,7 @@ function system_update_files_database(&$files, $type) {
         'name' => $file->name,
         'type' => $type,
         'owner' => isset($file->owner) ? $file->owner : '',
-        'info' => serialize($file->info),
+        'info' => drupal_serialize($file->info),
       ));
       $file->type = $type;
       $file->status = 0;

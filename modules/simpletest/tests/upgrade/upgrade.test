@@ -173,7 +173,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     db_insert('variable')
       ->fields(array(
         'name' => $name,
-        'value' => serialize($value),
+        'value' => drupal_serialize($value),
       ))
       ->execute();
 

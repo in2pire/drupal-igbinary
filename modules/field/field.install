@@ -225,7 +225,7 @@ function _update_7000_field_create_field(&$field) {
     'storage_module' => $field['storage']['module'],
     'storage_active' => (int) $field['storage']['active'],
     'locked' => (int) $field['locked'],
-    'data' => serialize($data),
+    'data' => drupal_serialize($data),
     'cardinality' => $field['cardinality'],
     'translatable' => (int) $field['translatable'],
     'deleted' => (int) $field['deleted'],
@@ -333,7 +333,7 @@ function _update_7000_field_read_fields(array $conditions = array(), $key = 'id'
     $query->condition($column, $value);
   }
   foreach ($query->execute() as $record) {
-    $field = unserialize($record['data']);
+    $field = drupal_unserialize($record['data']);
     $field['id'] = $record['id'];
     $field['field_name'] = $record['field_name'];
     $field['type'] = $record['type'];
@@ -379,7 +379,7 @@ function _update_7000_field_create_instance($field, &$instance) {
     'field_name' => $instance['field_name'],
     'entity_type' => $instance['entity_type'],
     'bundle' => $instance['bundle'],
-    'data' => serialize($data),
+    'data' => drupal_serialize($data),
     'deleted' => (int) $instance['deleted'],
   );
   $instance['id'] = db_insert('field_config_instance')
@@ -423,14 +423,14 @@ function field_update_7001() {
 
     // Place the updated entries in the existing serialized 'data' column.
     $data = db_query("SELECT data FROM {field_config} WHERE id = :id", array(':id' => $field['id']))->fetchField();
-    $data = unserialize($data);
+    $data = drupal_unserialize($data);
     $data['columns'] = $field['columns'];
     $data['indexes'] = $field['indexes'];
 
     // Save the new data.
     $query = db_update('field_config')
       ->condition('id', $field['id'])
-      ->fields(array('data' => serialize($data)))
+      ->fields(array('data' => drupal_serialize($data)))
       ->execute();
   }
 }

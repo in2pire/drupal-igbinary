@@ -4546,7 +4546,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
           'bid' => $batch['id'],
           'timestamp' => REQUEST_TIME,
           'token' => drupal_get_token($batch['id']),
-          'batch' => serialize($batch),
+          'batch' => drupal_serialize($batch),
         ))
         ->execute();
 

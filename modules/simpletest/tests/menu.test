@@ -663,7 +663,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
 
     foreach ($expected as $router_path => $load_functions) {
       $router_item = $this->menuLoadRouter($router_path);
-      $this->assertIdentical(unserialize($router_item['load_functions']), $load_functions, format_string('Expected load functions for router %router_path' , array('%router_path' => $router_path)));
+      $this->assertIdentical(drupal_unserialize($router_item['load_functions']), $load_functions, format_string('Expected load functions for router %router_path' , array('%router_path' => $router_path)));
     }
   }
 }

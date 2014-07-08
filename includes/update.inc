@@ -411,7 +411,7 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas, $moved_deltas) {
     $sandbox['progress'] = 0;
     $sandbox['last_user_processed'] = -1;
     $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} WHERE data LIKE :block", array(
-        ':block' => '%' . db_like(serialize('block')) . '%',
+        ':block' => '%' . db_like(drupal_serialize('block')) . '%',
       ))
       ->fetchField();
   }
@@ -420,12 +420,12 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas, $moved_deltas) {
   $result = db_select('users', 'u')
     ->fields('u', array('uid', 'data'))
     ->condition('uid', $sandbox['last_user_processed'], '>')
-    ->condition('data', '%' . db_like(serialize('block')) . '%', 'LIKE')
+    ->condition('data', '%' . db_like(drupal_serialize('block')) . '%', 'LIKE')
     ->orderBy('uid', 'ASC')
     ->range(0, $limit)
     ->execute();
   foreach ($result as $row) {
-    $data = unserialize($row->data);
+    $data = drupal_unserialize($row->data);
     $user_needs_update = FALSE;
     foreach ($renamed_deltas as $module => $deltas) {
       foreach ($deltas as $old_delta => $new_delta) {
@@ -452,7 +452,7 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas, $moved_deltas) {
     // Update the current user.
     if ($user_needs_update) {
       db_update('users')
-        ->fields(array('data' => serialize($data)))
+        ->fields(array('data' => drupal_serialize($data)))
         ->condition('uid', $row->uid)
         ->execute();
     }
@@ -821,7 +821,7 @@ function update_fix_d7_install_profile() {
     $values = array(
       'filename' => $filename,
       'name' => $profile,
-      'info' => serialize($info),
+      'info' => drupal_serialize($info),
       'schema_version' => 0,
       'type' => 'module',
       'status' => 1,

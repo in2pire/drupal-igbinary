@@ -3547,7 +3547,7 @@ function drupal_build_css_cache($css) {
   foreach ($css as $css_file) {
     $css_data[] = $css_file['data'];
   }
-  $key = hash('sha256', serialize($css_data));
+  $key = hash('sha256', drupal_serialize($css_data));
   if (isset($map[$key])) {
     $uri = $map[$key];
   }
@@ -4937,7 +4937,7 @@ function drupal_build_js_cache($files) {
   foreach ($files as $file) {
     $js_data[] = $file['data'];
   }
-  $key = hash('sha256', serialize($js_data));
+  $key = hash('sha256', drupal_serialize($js_data));
   if (isset($map[$key])) {
     $uri = $map[$key];
   }
@@ -6200,7 +6200,7 @@ function drupal_render_collect_attached($elements, $return = FALSE) {
 function drupal_render_cache_by_query($query, $function, $expire = CACHE_TEMPORARY, $granularity = NULL) {
   $cache_keys = array_merge(array($function), drupal_render_cid_parts($granularity));
   $query->preExecute();
-  $cache_keys[] = hash('sha256', serialize(array((string) $query, $query->getArguments())));
+  $cache_keys[] = hash('sha256', drupal_serialize(array((string) $query, $query->getArguments())));
   return array(
     '#query' => $query,
     '#pre_render' => array($function . '_pre_render'),
@@ -7027,7 +7027,8 @@ function drupal_get_schema_unprocessed($module, $table = NULL) {
  *   The module for which hook_schema() was invoked.
  * @param $remove_descriptions
  *   (optional) Whether to additionally remove 'description' keys of all tables
- *   and fields to improve performance of serialize() and unserialize().
+ *   and fields to improve performance of drupal_serialize() and
+ *   drupal_unserialize().
  *   Defaults to TRUE.
  */
 function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRUE) {
@@ -7145,7 +7146,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
       $fields[$field] = $object->$field;
     }
     else {
-      $fields[$field] = serialize($object->$field);
+      $fields[$field] = drupal_serialize($object->$field);
     }
 
     // Type cast to proper datatype, except when the value is NULL and the

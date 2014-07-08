@@ -292,7 +292,7 @@ function theme_dblog_message($variables) {
     }
     // Message to translate with injected variables.
     else {
-      $output = t($event->message, unserialize($event->variables));
+      $output = t($event->message, drupal_unserialize($event->variables));
     }
     if ($variables['link'] && isset($event->wid)) {
       // Truncate message to 56 chars.

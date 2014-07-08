@@ -124,7 +124,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
       $this->assertEqual($filter->status, $format_filters[$name]['status'], format_string('Database: Proper status for %filter in text format %format.', $t_args));
 
       // Verify that filter settings were properly stored.
-      $this->assertEqual(unserialize($filter->settings), isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), format_string('Database: Proper filter settings for %filter in text format %format.', $t_args));
+      $this->assertEqual(drupal_unserialize($filter->settings), isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), format_string('Database: Proper filter settings for %filter in text format %format.', $t_args));
 
       // Verify that each filter has a module name assigned.
       $this->assertTrue(!empty($filter->module), format_string('Database: Proper module name for %filter in text format %format.', $t_args));

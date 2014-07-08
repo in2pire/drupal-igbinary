@@ -431,7 +431,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     // If the data is permanent or not subject to a minimum cache lifetime,
     // unserialize and return the cached data.
     if ($cache->serialized) {
-      $cache->data = unserialize($cache->data);
+      $cache->data = drupal_unserialize($cache->data);
     }
 
     return $cache;
@@ -447,7 +447,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
       'expire' => $expire,
     );
     if (!is_string($data)) {
-      $fields['data'] = serialize($data);
+      $fields['data'] = drupal_serialize($data);
       $fields['serialized'] = 1;
     }
     else {

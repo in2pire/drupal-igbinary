@@ -164,7 +164,7 @@ function system_list($type) {
       // consistent with the one used in module_implements().
       $result = db_query("SELECT * FROM {system} WHERE type = 'theme' OR (type = 'module' AND status = 1) ORDER BY weight ASC, name ASC");
       foreach ($result as $record) {
-        $record->info = unserialize($record->info);
+        $record->info = drupal_unserialize($record->info);
         // Build a list of all enabled modules.
         if ($record->type == 'module') {
           $lists['module_enabled'][$record->name] = $record;

@@ -249,7 +249,7 @@ class RdfCrudTestCase extends DrupalWebTestCase {
     // Read the raw record from the {rdf_mapping} table.
     $result = db_query('SELECT * FROM {rdf_mapping} WHERE type = :type AND bundle = :bundle', array(':type' => $mapping['type'], ':bundle' => $mapping['bundle']));
     $stored_mapping = $result->fetchAssoc();
-    $stored_mapping['mapping'] = unserialize($stored_mapping['mapping']);
+    $stored_mapping['mapping'] = drupal_unserialize($stored_mapping['mapping']);
     $this->assertEqual($mapping, $stored_mapping, 'Mapping was stored properly in the {rdf_mapping} table.');
 
     // Verify loading of saved mapping.
@@ -264,7 +264,7 @@ class RdfCrudTestCase extends DrupalWebTestCase {
     // Read the raw record from the {rdf_mapping} table.
     $result = db_query('SELECT * FROM {rdf_mapping} WHERE type = :type AND bundle = :bundle', array(':type' => $mapping['type'], ':bundle' => $mapping['bundle']));
     $stored_mapping = $result->fetchAssoc();
-    $stored_mapping['mapping'] = unserialize($stored_mapping['mapping']);
+    $stored_mapping['mapping'] = drupal_unserialize($stored_mapping['mapping']);
     $this->assertEqual($mapping, $stored_mapping, 'Updated mapping was stored properly in the {rdf_mapping} table.');
 
     // Verify loading of saved mapping.

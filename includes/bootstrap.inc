@@ -917,7 +917,7 @@ function variable_initialize($conf = array()) {
     }
     else {
       // Proceed with variable rebuild.
-      $variables = array_map('unserialize', db_query('SELECT name, value FROM {variable}')->fetchAllKeyed());
+      $variables = array_map('drupal_unserialize', db_query('SELECT name, value FROM {variable}')->fetchAllKeyed());
       cache_set('variables', $variables, 'cache_bootstrap');
       lock_release($name);
     }
@@ -973,7 +973,7 @@ function variable_get($name, $default = NULL) {
 function variable_set($name, $value) {
   global $conf;
 
-  db_merge('variable')->key(array('name' => $name))->fields(array('value' => serialize($value)))->execute();
+  db_merge('variable')->key(array('name' => $name))->fields(array('value' => drupal_serialize($value)))->execute();
 
   cache_clear_all('variables', 'cache_bootstrap');
 
@@ -1385,7 +1385,7 @@ function bootstrap_hooks() {
  *   The attribute of $obj whose value should be unserialized.
  */
 function drupal_unpack($obj, $field = 'data') {
-  if ($obj->$field && $data = unserialize($obj->$field)) {
+  if ($obj->$field && $data = drupal_unserialize($obj->$field)) {
     foreach ($data as $key => $value) {
       if (!empty($key) && !isset($obj->$key)) {
         $obj->$key = $value;
@@ -2290,7 +2290,7 @@ function drupal_get_hash_salt() {
   global $drupal_hash_salt, $databases;
   // If the $drupal_hash_salt variable is empty, a hash of the serialized
   // database credentials is used as a fallback salt.
-  return empty($drupal_hash_salt) ? hash('sha256', serialize($databases)) : $drupal_hash_salt;
+  return empty($drupal_hash_salt) ? hash('sha256', drupal_serialize($databases)) : $drupal_hash_salt;
 }
 
 /**
@@ -3484,4 +3484,59 @@ function drupal_check_memory_limit($required, $memory_limit = NULL) {
   // - The memory limit is set to unlimited (-1).
   // - The memory limit is greater than the memory required for the operation.
   return ((!$memory_limit) || ($memory_limit == -1) || (parse_size($memory_limit) >= parse_size($required)));
+}
+
+/**
+ * Generates a storable representation of a value.
+ *
+ * This is useful for storing or passing PHP values around without losing their
+ * type and structure.
+ *
+ * To make the serialized string into a PHP value again, use
+ * drupal_unserialize().
+ *
+ * @param $value
+ *   The value to be serialized. drupal_serialize() handles all types, except
+ *   the resource-type. You can even drupal_serialize() arrays that contain
+ *   references to itself. Circular references inside the array/object you are
+ *   serializing will also be stored. Any other reference will be lost.
+ *
+ *   When serializing objects, PHP will attempt to call the member function
+ *   __sleep() prior to serialization. This is to allow the object to do any
+ *   last minute clean-up, etc. prior to being serialized. Likewise, when the
+ *   object is restored using drupal_unserialize() the __wakeup() member
+ *   function is called.
+ *
+ * @return
+ *   Returns a string containing a byte-stream representation of value that can
+ *   be stored anywhere.
+ *
+ *   Note that this is a binary string which may include null bytes, and needs
+ *   to be stored and handled as such. For example, drupal_serialize() output
+ *   should generally be stored in a BLOB field in a database, rather than a
+ *   CHAR or TEXT field.
+ */
+function drupal_serialize($value) {
+  return igbinary_serialize($value);
+}
+
+/**
+ * Creates a PHP value from a stored representation.
+ *
+ * @param $value
+ *   The serialized string.
+ *
+ *   If the variable being unserialized is an object, after successfully
+ *   reconstructing the object PHP will automatically attempt to call the
+ *   __wakeup() member function (if it exists).
+ *
+ * @return
+ *   The converted value is returned, and can be a boolean, integer, float,
+ *   string, array or object.
+ *
+ *   In case the passed string is not unserializeable, FALSE is returned and
+ *   E_NOTICE is issued.
+ */
+function drupal_unserialize($value) {
+  return igbinary_unserialize($value);
 }

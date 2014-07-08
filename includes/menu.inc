@@ -309,7 +309,7 @@ define('MENU_PREFERRED_LINK', '1cf698d64d1aa4b83907cf6ed55db3a7f8e92c91');
  * actually exists. This list of 'masks' is built in menu_rebuild().
  *
  * @param $parts
- *   An array of path parts; for the above example, 
+ *   An array of path parts; for the above example,
  *   array('node', '12345', 'edit').
  *
  * @return
@@ -396,7 +396,7 @@ function menu_get_ancestors($parts) {
  *   The unserialized $data array, with path arguments replaced.
  */
 function menu_unserialize($data, $map) {
-  if ($data = unserialize($data)) {
+  if ($data = drupal_unserialize($data)) {
     foreach ($data as $k => $v) {
       if (is_int($v)) {
         $data[$k] = isset($map[$v]) ? $map[$v] : '';
@@ -555,7 +555,7 @@ function _menu_load_objects(&$item, &$map) {
   if ($load_functions = $item['load_functions']) {
     // If someone calls this function twice, then unserialize will fail.
     if (!is_array($load_functions)) {
-      $load_functions = unserialize($load_functions);
+      $load_functions = drupal_unserialize($load_functions);
     }
     $path_map = $map;
     foreach ($load_functions as $index => $function) {
@@ -808,7 +808,7 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
  * @see hook_menu()
  */
 function _menu_link_map_translate(&$map, $to_arg_functions) {
-  $to_arg_functions = unserialize($to_arg_functions);
+  $to_arg_functions = drupal_unserialize($to_arg_functions);
   foreach ($to_arg_functions as $index => $function) {
     // Translate place-holders into real values.
     $arg = $function(!empty($map[$index]) ? $map[$index] : '', $map, $index);
@@ -869,7 +869,7 @@ function menu_tail_load($arg, &$map, $index) {
  */
 function _menu_link_translate(&$item, $translate = FALSE) {
   if (!is_array($item['options'])) {
-    $item['options'] = unserialize($item['options']);
+    $item['options'] = drupal_unserialize($item['options']);
   }
   if ($item['external']) {
     $item['access'] = 1;
@@ -1374,7 +1374,7 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
   if (isset($parameters['expanded'])) {
     sort($parameters['expanded']);
   }
-  $tree_cid = 'links:' . $menu_name . ':tree-data:' . $GLOBALS['language']->language . ':' . hash('sha256', serialize($parameters));
+  $tree_cid = 'links:' . $menu_name . ':tree-data:' . $GLOBALS['language']->language . ':' . hash('sha256', drupal_serialize($parameters));
 
   // If we do not have this tree in the static cache, check {cache_menu}.
   if (!isset($trees[$tree_cid])) {
@@ -2962,7 +2962,7 @@ function menu_load_links($menu_name) {
     ->fetchAll();
 
   foreach ($links as &$link) {
-    $link['options'] = unserialize($link['options']);
+    $link['options'] = drupal_unserialize($link['options']);
   }
   return $links;
 }
@@ -3095,7 +3095,7 @@ function menu_link_save(&$item, $existing_item = array(), $parent_candidates = a
       $existing_item = db_query('SELECT * FROM {menu_links} WHERE mlid = :mlid', array('mlid' => $item['mlid']))->fetchAssoc();
     }
     if ($existing_item) {
-      $existing_item['options'] = unserialize($existing_item['options']);
+      $existing_item['options'] = drupal_unserialize($existing_item['options']);
     }
   }
   else {
@@ -3127,7 +3127,7 @@ function menu_link_save(&$item, $existing_item = array(), $parent_candidates = a
         'weight' => $item['weight'],
         'module' => $item['module'],
         'link_title' => $item['link_title'],
-        'options' => serialize($item['options']),
+        'options' => drupal_serialize($item['options']),
         'customized' => $item['customized'],
         'updated' => $item['updated'],
       ))
@@ -3201,7 +3201,7 @@ function menu_link_save(&$item, $existing_item = array(), $parent_candidates = a
         'p9' => $item['p9'],
         'module' => $item['module'],
         'link_title' => $item['link_title'],
-        'options' => serialize($item['options']),
+        'options' => drupal_serialize($item['options']),
         'customized' => $item['customized'],
       ))
       ->condition('mlid', $item['mlid'])
@@ -3406,7 +3406,7 @@ function menu_link_maintain($module, $op, $link_path, $link_title) {
       $result = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path AND module = :module AND customized = 0", array(':link_path' => $link_path, ':module' => $module))->fetchAll(PDO::FETCH_ASSOC);
       foreach ($result as $link) {
         $link['link_title'] = $link_title;
-        $link['options'] = unserialize($link['options']);
+        $link['options'] = drupal_unserialize($link['options']);
         menu_link_save($link);
       }
       break;
@@ -3600,7 +3600,7 @@ function _menu_router_build($callbacks) {
     }
     $masks[$fit] = 1;
     $item['_load_functions'] = $load_functions;
-    $item['to_arg_functions'] = empty($to_arg_functions) ? '' : serialize($to_arg_functions);
+    $item['to_arg_functions'] = empty($to_arg_functions) ? '' : drupal_serialize($to_arg_functions);
     $item += array(
       'title' => '',
       'weight' => 0,
@@ -3730,7 +3730,7 @@ function _menu_router_build($callbacks) {
       $item['access callback'] = intval($item['access callback']);
     }
 
-    $item['load_functions'] = empty($item['_load_functions']) ? '' : serialize($item['_load_functions']);
+    $item['load_functions'] = empty($item['_load_functions']) ? '' : drupal_serialize($item['_load_functions']);
     $item += array(
       'access arguments' => array(),
       'access callback' => '',
@@ -3810,9 +3810,9 @@ function _menu_router_save($menu, $masks) {
       'load_functions' => $item['load_functions'],
       'to_arg_functions' => $item['to_arg_functions'],
       'access_callback' => $item['access callback'],
-      'access_arguments' => serialize($item['access arguments']),
+      'access_arguments' => drupal_serialize($item['access arguments']),
       'page_callback' => $item['page callback'],
-      'page_arguments' => serialize($item['page arguments']),
+      'page_arguments' => drupal_serialize($item['page arguments']),
       'delivery_callback' => $item['delivery callback'],
       'fit' => $item['_fit'],
       'number_parts' => $item['_number_parts'],
@@ -3821,9 +3821,9 @@ function _menu_router_save($menu, $masks) {
       'tab_root' => $item['tab_root'],
       'title' => $item['title'],
       'title_callback' => $item['title callback'],
-      'title_arguments' => ($item['title arguments'] ? serialize($item['title arguments']) : ''),
+      'title_arguments' => ($item['title arguments'] ? drupal_serialize($item['title arguments']) : ''),
       'theme_callback' => $item['theme callback'],
-      'theme_arguments' => serialize($item['theme arguments']),
+      'theme_arguments' => drupal_serialize($item['theme arguments']),
       'type' => $item['type'],
       'description' => $item['description'],
       'position' => $item['position'],

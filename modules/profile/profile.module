@@ -254,7 +254,7 @@ function profile_user_load($users) {
   $result = db_query('SELECT f.name, f.type, v.uid, v.value FROM {profile_field} f INNER JOIN {profile_value} v ON f.fid = v.fid WHERE uid IN (:uids)', array(':uids' => array_keys($users)));
   foreach ($result as $record) {
     if (empty($users[$record->uid]->{$record->name})) {
-      $users[$record->uid]->{$record->name} = _profile_field_serialize($record->type) ? unserialize($record->value) : $record->value;
+      $users[$record->uid]->{$record->name} = _profile_field_serialize($record->type) ? drupal_unserialize($record->value) : $record->value;
     }
   }
 }
@@ -263,7 +263,7 @@ function profile_save_profile(&$edit, $account, $category, $register = FALSE) {
   $result = _profile_get_fields($category, $register);
   foreach ($result as $field) {
     if (_profile_field_serialize($field->type)) {
-      $edit[$field->name] = serialize($edit[$field->name]);
+      $edit[$field->name] = drupal_serialize($edit[$field->name]);
     }
     db_merge('profile_value')
       ->key(array(

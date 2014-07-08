@@ -400,7 +400,7 @@ function book_get_books() {
       $result2 = $query->execute();
       foreach ($result2 as $link) {
         $link['href'] = $link['link_path'];
-        $link['options'] = unserialize($link['options']);
+        $link['options'] = drupal_unserialize($link['options']);
         $all_books[$link['bid']] = $link;
       }
     }
@@ -874,7 +874,7 @@ function book_node_load($nodes, $types) {
     $nodes[$record['nid']]->book = $record;
     $nodes[$record['nid']]->book['href'] = $record['link_path'];
     $nodes[$record['nid']]->book['title'] = $record['link_title'];
-    $nodes[$record['nid']]->book['options'] = unserialize($record['options']);
+    $nodes[$record['nid']]->book['options'] = drupal_unserialize($record['options']);
   }
 }
 
@@ -1419,7 +1419,7 @@ function book_menu_subtree_data($link) {
       $data['node_links'] = array();
       menu_tree_collect_node_links($data['tree'], $data['node_links']);
       // Compute the real cid for book subtree data.
-      $tree_cid = 'links:' . $item['menu_name'] . ':subtree-data:' . hash('sha256', serialize($data));
+      $tree_cid = 'links:' . $item['menu_name'] . ':subtree-data:' . hash('sha256', drupal_serialize($data));
       // Cache the data, if it is not already in the cache.
 
       if (!cache_get($tree_cid, 'cache_menu')) {

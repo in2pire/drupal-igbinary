@@ -3090,7 +3090,7 @@ function system_actions_configure($form, &$form_state, $action = NULL) {
     $edit['actions_type'] = $data->type;
     $function = $data->callback;
     $action = drupal_hash_base64($data->callback);
-    $params = unserialize($data->parameters);
+    $params = drupal_unserialize($data->parameters);
     if ($params) {
       foreach ($params as $name => $val) {
         $edit[$name] = $val;

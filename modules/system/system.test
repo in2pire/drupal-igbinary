@@ -116,7 +116,7 @@ class ModuleTestCase extends DrupalWebTestCase {
     $count = db_select('watchdog', 'w')
       ->condition('type', $type)
       ->condition('message', $message)
-      ->condition('variables', serialize($variables))
+      ->condition('variables', drupal_serialize($variables))
       ->condition('severity', $severity)
       ->condition('link', $link)
       ->countQuery()
@@ -2228,7 +2228,7 @@ class SystemInfoAlterTestCase extends DrupalWebTestCase {
    */
   function getSystemInfo($name, $type) {
     $raw_info = db_query("SELECT info FROM {system} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type))->fetchField();
-    return $raw_info ? unserialize($raw_info) : FALSE;
+    return $raw_info ? drupal_unserialize($raw_info) : FALSE;
   }
 }
 

@@ -246,7 +246,7 @@ function filter_format_save($format) {
     $fields['weight'] = $format->filters[$name]['weight'];
     $fields['status'] = $format->filters[$name]['status'];
     $fields['module'] = $format->filters[$name]['module'];
-    $fields['settings'] = serialize($format->filters[$name]['settings']);
+    $fields['settings'] = drupal_serialize($format->filters[$name]['settings']);
 
     db_merge('filter')
       ->key(array(
@@ -712,7 +712,7 @@ function filter_list_format($format_id) {
       if (isset($filter_info[$name])) {
         $filter->title = $filter_info[$name]['title'];
         // Unpack stored filter settings.
-        $filter->settings = (isset($filter->settings) ? unserialize($filter->settings) : array());
+        $filter->settings = (isset($filter->settings) ? drupal_unserialize($filter->settings) : array());
         // Merge in default settings.
         if (isset($filter_info[$name]['default settings'])) {
           $filter->settings += $filter_info[$name]['default settings'];

@@ -1842,7 +1842,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // by DrupalWebTestCase::error().
     if (preg_match('/^X-Drupal-Assertion-[0-9]+: (.*)$/', $header, $matches)) {
       // Call DrupalWebTestCase::error() with the parameters from the header.
-      call_user_func_array(array(&$this, 'error'), unserialize(urldecode($matches[1])));
+      call_user_func_array(array(&$this, 'error'), drupal_unserialize(urldecode($matches[1])));
     }
 
     // Save cookies.

@@ -278,6 +278,11 @@ $drupal_hash_salt = '';
  */
 
 /**
+ * Use igbinary as default serializer.
+ */
+ini_set('session.serialize_handler', 'igbinary');
+
+/**
  * Some distributions of Linux (most notably Debian) ship their PHP
  * installations with garbage collection (gc) disabled. Since Drupal depends on
  * PHP's garbage collection for clearing sessions, ensure that garbage

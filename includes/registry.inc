@@ -38,7 +38,7 @@ function _registry_update() {
   // Get the list of files we are going to parse.
   $files = array();
   foreach ($modules as &$module) {
-    $module->info = unserialize($module->info);
+    $module->info = drupal_unserialize($module->info);
     $dir = dirname($module->filename);
 
     // Store the module directory for use in hook_registry_files_alter().

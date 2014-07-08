@@ -213,7 +213,7 @@ class SystemQueue implements DrupalReliableQueueInterface {
     $query = db_insert('queue')
       ->fields(array(
         'name' => $this->name,
-        'data' => serialize($data),
+        'data' => drupal_serialize($data),
         // We cannot rely on REQUEST_TIME because many items might be created
         // by a single request which takes longer than 1 second.
         'created' => time(),
@@ -247,7 +247,7 @@ class SystemQueue implements DrupalReliableQueueInterface {
           ->condition('expire', 0);
         // If there are affected rows, this update succeeded.
         if ($update->execute()) {
-          $item->data = unserialize($item->data);
+          $item->data = drupal_unserialize($item->data);
           return $item;
         }
       }

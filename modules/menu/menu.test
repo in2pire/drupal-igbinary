@@ -501,7 +501,7 @@ class MenuTestCase extends DrupalWebTestCase {
   function assertMenuLink($mlid, array $expected_item) {
     // Retrieve menu link.
     $item = db_query('SELECT * FROM {menu_links} WHERE mlid = :mlid', array(':mlid' => $mlid))->fetchAssoc();
-    $options = unserialize($item['options']);
+    $options = drupal_unserialize($item['options']);
     if (!empty($options['query'])) {
       $item['link_path'] .= '?' . drupal_http_build_query($options['query']);
     }

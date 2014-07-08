@@ -28,7 +28,7 @@ class BatchQueue extends SystemQueue {
   public function claimItem($lease_time = 0) {
     $item = db_query_range('SELECT data, item_id FROM {queue} q WHERE name = :name ORDER BY item_id ASC', 0, 1, array(':name' => $this->name))->fetchObject();
     if ($item) {
-      $item->data = unserialize($item->data);
+      $item->data = drupal_unserialize($item->data);
       return $item;
     }
     return FALSE;
@@ -43,7 +43,7 @@ class BatchQueue extends SystemQueue {
     $result = array();
     $items = db_query('SELECT data FROM {queue} q WHERE name = :name ORDER BY item_id ASC', array(':name' => $this->name))->fetchAll();
     foreach ($items as $item) {
-      $result[] = unserialize($item->data);
+      $result[] = drupal_unserialize($item->data);
     }
     return $result;
   }

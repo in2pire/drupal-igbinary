@@ -674,7 +674,7 @@ class DatabaseInsertLOBTestCase extends DatabaseTestCase {
       ->fields(array('blob1' => $data))
       ->execute();
     $r = db_query('SELECT * FROM {test_one_blob} WHERE id = :id', array(':id' => $id))->fetchAssoc();
-    $this->assertTrue($r['blob1'] === $data, format_string('Can insert a blob: id @id, @data.', array('@id' => $id, '@data' => serialize($r))));
+    $this->assertTrue($r['blob1'] === $data, format_string('Can insert a blob: id @id, @data.', array('@id' => $id, '@data' => drupal_serialize($r))));
   }
 
   /**
@@ -1043,7 +1043,7 @@ class DatabaseUpdateLOBTestCase extends DatabaseTestCase {
       ->execute();
 
     $r = db_query('SELECT * FROM {test_one_blob} WHERE id = :id', array(':id' => $id))->fetchAssoc();
-    $this->assertTrue($r['blob1'] === $data, format_string('Can update a blob: id @id, @data.', array('@id' => $id, '@data' => serialize($r))));
+    $this->assertTrue($r['blob1'] === $data, format_string('Can update a blob: id @id, @data.', array('@id' => $id, '@data' => drupal_serialize($r))));
   }
 
   /**
@@ -3057,7 +3057,7 @@ class DatabaseSerializeQueryTestCase extends DatabaseTestCase {
     $query->condition('name', 'Ringo');
     // If this doesn't work, it will throw an exception, so no need for an
     // assertion.
-    $query = unserialize(serialize($query));
+    $query = drupal_unserialize(drupal_serialize($query));
     $results = $query->execute()->fetchCol();
     $this->assertEqual($results[0], 28, 'Query properly executed after unserialization.');
   }

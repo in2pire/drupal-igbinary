@@ -772,7 +772,7 @@ function _update_cache_set($cid, $data, $expire) {
     'expire' => $expire,
   );
   if (!is_string($data)) {
-    $fields['data'] = serialize($data);
+    $fields['data'] = drupal_serialize($data);
     $fields['serialized'] = 1;
   }
   else {
@@ -800,7 +800,7 @@ function _update_cache_get($cid) {
   $cache = db_query("SELECT data, created, expire, serialized FROM {cache_update} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
   if (isset($cache->data)) {
     if ($cache->serialized) {
-      $cache->data = unserialize($cache->data);
+      $cache->data = drupal_unserialize($cache->data);
     }
   }
   return $cache;
@@ -824,7 +824,7 @@ function _update_get_cache_multiple($cid_prefix) {
   foreach ($result as $cache) {
     if ($cache) {
       if ($cache->serialized) {
-        $cache->data = unserialize($cache->data);
+        $cache->data = drupal_unserialize($cache->data);
       }
       $data[$cache->cid] = $cache;
     }

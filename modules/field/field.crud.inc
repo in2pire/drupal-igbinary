@@ -371,7 +371,7 @@ function field_read_fields($params = array(), $include_additional = array()) {
   $fields = array();
   $results = $query->execute();
   foreach ($results as $record) {
-    $field = unserialize($record['data']);
+    $field = drupal_unserialize($record['data']);
     $field['id'] = $record['id'];
     $field['field_name'] = $record['field_name'];
     $field['type'] = $record['type'];
@@ -740,7 +740,7 @@ function field_read_instances($params = array(), $include_additional = array()) 
     // module exposing them was disabled).
     $entity_info = entity_get_info($record['entity_type']);
     if ($include_inactive || $entity_info) {
-      $instance = unserialize($record['data']);
+      $instance = drupal_unserialize($record['data']);
       $instance['id'] = $record['id'];
       $instance['field_id'] = $record['field_id'];
       $instance['field_name'] = $record['field_name'];

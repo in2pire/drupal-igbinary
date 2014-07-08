@@ -88,7 +88,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
       $query->condition('aid', $conditions, 'IN');
       $result = $query->execute();
       foreach ($result as $action) {
-        $actions[$action->aid] = $action->parameters ? unserialize($action->parameters) : array();
+        $actions[$action->aid] = $action->parameters ? drupal_unserialize($action->parameters) : array();
         $actions[$action->aid]['callback'] = $action->callback;
         $actions[$action->aid]['type'] = $action->type;
       }
@@ -120,7 +120,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
       $action = db_query("SELECT callback, parameters FROM {actions} WHERE aid = :aid", array(':aid' => $action_ids))->fetchObject();
       $function = $action->callback;
       if (function_exists($function)) {
-        $context = array_merge($context, unserialize($action->parameters));
+        $context = array_merge($context, drupal_unserialize($action->parameters));
         $actions_result[$action_ids] = $function($object, $context, $a1, $a2);
       }
       else {
@@ -352,7 +352,7 @@ function actions_save($function, $type, $params, $label, $aid = NULL) {
     ->fields(array(
       'callback' => $function,
       'type' => $type,
-      'parameters' => serialize($params),
+      'parameters' => drupal_serialize($params),
       'label' => $label,
     ))
     ->execute();

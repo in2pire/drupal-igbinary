@@ -200,7 +200,7 @@ function _rdf_mapping_load($type, $bundle) {
   if (!$mapping) {
     return array();
   }
-  return unserialize($mapping);
+  return drupal_unserialize($mapping);
 }
 
 /**
@@ -234,7 +234,7 @@ function rdf_mapping_save($mapping) {
       'bundle' => $mapping['bundle'],
     ))
     ->fields(array(
-      'mapping' => serialize($mapping['mapping']),
+      'mapping' => drupal_serialize($mapping['mapping']),
     ))
     ->execute();
 
